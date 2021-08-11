@@ -1,20 +1,48 @@
 Config = {}
 
-Config.Target = 'qtarget'  --change to bt-target if you use it
+Config.Target = 'bt-target'  --change to bt-target if you use it
 
 ---- store prices ----
 
-Config.burgerprice = 10
-Config.chipsprice = 15
-Config.popcornprice = 5
-Config.sandwichprice = 10
+Config.groceryitem1 = 'burger'   --- item
+Config.groceryprice1 = 15         --- item price
+
+Config.groceryitem2 = 'chips'
+Config.groceryprice2 = 10
+
+Config.groceryitem3 = 'popcorn'
+Config.groceryprice3 = 15
+
+Config.groceryitem4 = 'sandwich'
+Config.groceryprice4 = 15
 
 ---- liquor store ----
 
-Config.wineprice = 10
-Config.tekilaprice = 15
-Config.beerprice = 5
-Config.vodkaprice = 10
+Config.liquoritem1 = 'wine'
+Config.liquorprice1 = 20
+
+Config.liquoritem2 = 'tekila'
+Config.liquorprice2 = 30
+
+Config.liquoritem3 = 'beer'
+Config.liquorprice3 = 15
+
+Config.liquoritem4 = 'vodka'
+Config.liquorprice4 = 20
+
+---- illegal shop ----
+
+Config.weaponitem1 = 'WEAPON_PISTOL'
+Config.weaponprice1 = 10000
+
+Config.weaponitem2 = 'WEAPON_SMG'
+Config.weaponprice2 = 20000
+
+Config.weaponitem3 = 'WEAPON_BAT'
+Config.weaponprice3 = 5000
+
+Config.weaponitem4 = 'WEAPON_KNIFE'
+Config.weaponprice4 = 7000
 
 
 ---- NPC spawn ----
@@ -154,6 +182,15 @@ Config.main = {
 		modelo = 'csb_ortega',
 		coords = vector3(1166.8, 2710.78, 38.16), 
         heading = 0.0,
+		gender = 'male'
+	},
+
+	----- illegal items -----
+
+	{
+		modelo = 'cs_taostranslator',
+		coords = vector3(-45.54, 1918.58, 195.5), 
+        heading = 2.4,
 		gender = 'male'
 	},
 

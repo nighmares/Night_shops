@@ -89,18 +89,25 @@ exports[Config.Target]:AddTargetModel({-1059388209}, {
 	distance = 2
 })
 
-end)
+exports[Config.Target]:AddTargetModel({1397974313}, {
+	options = {
+		{
+			event = "Night:illegalshop",
+			icon = "fas fa-box-circle-check",
+			label = "Open illegal shop"
+		},
+	},
+    job = {"all"},
+	distance = 2
+})
 
---[[
-RegisterCommand("market", function(source, args, rawCommand)    ----debug commnad
-    TriggerEvent('Night:regularshop')
-end)]]
+end)
 
 RegisterNetEvent('takeanim2')
 AddEventHandler('takeanim2', function()
-    ClearPedSecondaryTask(GetPlayerPed(-1))
+    ClearPedSecondaryTask(ESX.PlayerData.ped)
     loadAnimDict2("mp_safehouselost@") 
-    TaskPlayAnim(GetPlayerPed(-1), "mp_safehouselost@", "package_dropoff", 8.0, 1.0, -1, 16, 0, 0, 0, 0 )
+    TaskPlayAnim(ESX.PlayerData.ped, "mp_safehouselost@", "package_dropoff", 8.0, 1.0, -1, 16, 0, 0, 0, 0 )
 end)
 
 function loadAnimDict2( dict )
@@ -121,14 +128,15 @@ RegisterNetEvent('Night:regularshop', function()
         },
         {
             id = 2,
-            header = "Bread",
+            header = "Burger",
             txt = "Price [10 each]",
             params = {
-                event = "Night:dialogmenu",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'burger',
-                   
-                    
+                    price = Config.groceryprice1,
+                },
+                arg2 = {
+                    item = Config.groceryitem1,
                 }
                    
             }
@@ -138,10 +146,12 @@ RegisterNetEvent('Night:regularshop', function()
             header = "chips",
             txt = "Price [15 each]",
             params = {
-                event = "Night:dialogmenu2",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'chips',
-                    
+                    price = Config.groceryprice2,
+                },
+                arg2 = {
+                    item = Config.groceryitem2,
                 }
                 
             }
@@ -151,10 +161,12 @@ RegisterNetEvent('Night:regularshop', function()
             header = "popcorn",
             txt = "Price [5 each]",
             params = {
-                event = "Night:dialogmenu3",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'popcorn',
-                    
+                    price = Config.groceryprice3,
+                },
+                arg2 = {
+                    item = Config.groceryitem3,
                 }
                 
             }
@@ -164,41 +176,26 @@ RegisterNetEvent('Night:regularshop', function()
             header = "sandwich",
             txt = "Price [10 each]",
             params = {
-                event = "Night:dialogmenu4",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'sandwich',
-                    
+                    price = Config.groceryprice4,
+                },
+                arg2 = {
+                    item = Config.groceryitem4,
                 }
             }
         },
         
         
     })
-end)
+end) 
 
-RegisterNetEvent('Night:dialogmenu')
-AddEventHandler('Night:dialogmenu', function(items)
-    local itemname = items.itemname
+------ shops client trigger ----
 
-    local keyboard = exports["nh-keyboard"]:KeyboardInput({
-        header = "Amount to buy", 
-        rows = {
-            {
-                id = 0, 
-                txt = "numbers!!"
-            }
-        }
-    })
-    if keyboard ~= nil then
-        TriggerEvent('takeanim2')
-        Citizen.Wait(2000)
-        TriggerServerEvent('night_shops:burger',itemname, keyboard[1].input)
-    end
-end)  
-
-RegisterNetEvent('Night:dialogmenu2')
-AddEventHandler('Night:dialogmenu2', function(items)
-    local itemname = items.itemname
+RegisterNetEvent('Night:grocery')
+AddEventHandler('Night:grocery', function(items,money)
+    local price = items.price
+    local item = money.item
 
     local keyboard = exports["nh-keyboard"]:KeyboardInput({
         header = "Amount to buy", 
@@ -215,55 +212,17 @@ AddEventHandler('Night:dialogmenu2', function(items)
             if hasMoney then
                 TriggerEvent('takeanim2')
                 Citizen.Wait(2000)
-                TriggerServerEvent('night_shops:chips',itemname, keyboard[1].input)
+                TriggerServerEvent('night_shops:chips',price,item, keyboard[1].input)
             else
                 exports['mythic_notify']:SendAlert('inform', ' you cant afford shit bud!')
             end
-        end,5)            
+        end,price * keyboard[1].input)            
 
        
     end
 end) 
 
-RegisterNetEvent('Night:dialogmenu3')
-AddEventHandler('Night:dialogmenu3', function(items)
-    local itemname = items.itemname
-
-    local keyboard = exports["nh-keyboard"]:KeyboardInput({
-        header = "Amount to buy", 
-        rows = {
-            {
-                id = 0, 
-                txt = "numbers!!"
-            }
-        }
-    })
-    if keyboard ~= nil then
-        TriggerEvent('takeanim2')
-        Citizen.Wait(2000)
-        TriggerServerEvent('night_shops:popcorn',itemname, keyboard[1].input)
-    end
-end) 
-
-RegisterNetEvent('Night:dialogmenu4')
-AddEventHandler('Night:dialogmenu4', function(items)
-    local itemname = items.itemname
-
-    local keyboard = exports["nh-keyboard"]:KeyboardInput({
-        header = "Amount to buy", 
-        rows = {
-            {
-                id = 0, 
-                txt = "numbers!!"
-            }
-        }
-    })
-    if keyboard ~= nil then
-        TriggerEvent('takeanim2')
-        Citizen.Wait(2000)
-        TriggerServerEvent('night_shops:sandwich',itemname, keyboard[1].input)
-    end
-end) 
+ 
 
 ------ liquor store -------
 
@@ -279,11 +238,12 @@ RegisterNetEvent('Night:alcoholshop', function()
             header = "wine",
             txt = "Price [10 each]",
             params = {
-                event = "Night:wine",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'wine',
-                   
-                    
+                    price = Config.liquorprice1,
+                },
+                arg2 = {
+                    item = Config.liquoritem1,
                 }
                    
             }
@@ -293,10 +253,12 @@ RegisterNetEvent('Night:alcoholshop', function()
             header = "tekila",
             txt = "Price [15 each]",
             params = {
-                event = "Night:tekila",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'tekila',
-                    
+                    price = Config.liquorprice2,
+                },
+                arg2 = {
+                    item = Config.liquoritem2,
                 }
                 
             }
@@ -306,10 +268,12 @@ RegisterNetEvent('Night:alcoholshop', function()
             header = "beer",
             txt = "Price [5 each]",
             params = {
-                event = "Night:beer",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'beer',
-                    
+                    price = Config.liquorprice3,
+                },
+                arg2 = {
+                    item = Config.liquoritem3,
                 }
                 
             }
@@ -319,10 +283,12 @@ RegisterNetEvent('Night:alcoholshop', function()
             header = "vodka",
             txt = "Price [10 each]",
             params = {
-                event = "Night:vodka",
+                event = "Night:grocery",
                 args = {
-                    itemname = 'vodka',
-                    
+                    price = Config.liquorprice4,
+                },
+                arg2 = {
+                    item = Config.liquoritem4,
                 }
             }
         },
@@ -330,30 +296,83 @@ RegisterNetEvent('Night:alcoholshop', function()
         
     })
 end) 
+----- illegal item shop -----
 
-RegisterNetEvent('Night:wine')
-AddEventHandler('Night:wine', function(items)
-    local itemname = items.itemname
-
-    local keyboard = exports["nh-keyboard"]:KeyboardInput({
-        header = "Amount to buy", 
-        rows = {
-            {
-                id = 0, 
-                txt = "numbers!!"
+RegisterNetEvent('Night:illegalshop', function()
+    TriggerEvent('nh-context:sendMenu', {
+        {
+            id = 1,
+            header = "illegal shop",
+            txt = ""
+        },
+        {
+            id = 2,
+            header = "pistol",
+            txt = "",
+            params = {
+                event = "Night:weapons",
+                args = {
+                    price = Config.weaponprice1,
+                },
+                arg2 = {
+                    item = Config.weaponitem1,
+                }
+                   
             }
-        }
+        },
+        {
+            id = 3,
+            header = "smg",
+            txt = "",
+            params = {
+                event = "Night:weapons",
+                args = {
+                    price = Config.weaponprice2,
+                },
+                arg2 = {
+                    item = Config.weaponitem2,
+                }
+                
+            }
+        },
+        {
+            id = 4,
+            header = "bat",
+            txt = "",
+            params = {
+                event = "Night:weapons",
+                args = {
+                    price = Config.weaponprice3,
+                },
+                arg2 = {
+                    item = Config.weaponitem3,
+                }
+                
+            }
+        },
+		{
+            id = 5,
+            header = "knife",
+            txt = "",
+            params = {
+                event = "Night:weapons",
+                args = {
+                    price = Config.weaponprice4,
+                },
+                arg2 = {
+                    item = Config.weaponitem4,
+                }
+            }
+        },
+        
+        
     })
-    if keyboard ~= nil then
-        TriggerEvent('takeanim2')
-        Citizen.Wait(2000)
-        TriggerServerEvent('night_shops:wine',itemname, keyboard[1].input)
-    end
 end)
 
-RegisterNetEvent('Night:tekila')
-AddEventHandler('Night:tekila', function(items)
-    local itemname = items.itemname
+RegisterNetEvent('Night:weapons')
+AddEventHandler('Night:weapons', function(items,money)
+    local price = items.price
+    local item = money.item
 
     local keyboard = exports["nh-keyboard"]:KeyboardInput({
         header = "Amount to buy", 
@@ -365,49 +384,15 @@ AddEventHandler('Night:tekila', function(items)
         }
     })
     if keyboard ~= nil then
-        TriggerEvent('takeanim2')
-        Citizen.Wait(2000)
-        TriggerServerEvent('night_shops:tekila',itemname, keyboard[1].input)
-    end
-end)
-
-RegisterNetEvent('Night:beer')
-AddEventHandler('Night:beer', function(items)
-    local itemname = items.itemname
-
-    local keyboard = exports["nh-keyboard"]:KeyboardInput({
-        header = "Amount to buy", 
-        rows = {
-            {
-                id = 0, 
-                txt = "numbers!!"
-            }
-        }
-    })
-    if keyboard ~= nil then
-        TriggerEvent('takeanim2')
-        Citizen.Wait(2000)
-        TriggerServerEvent('night_shops:beer',itemname, keyboard[1].input)
-    end
-end)
-
-RegisterNetEvent('Night:vodka')
-AddEventHandler('Night:vodka', function(items)
-    local itemname = items.itemname
-
-    local keyboard = exports["nh-keyboard"]:KeyboardInput({
-        header = "Amount to buy", 
-        rows = {
-            {
-                id = 0, 
-                txt = "numbers!!"
-            }
-        }
-    })
-    if keyboard ~= nil then
-        TriggerEvent('takeanim2')
-        Citizen.Wait(2000)
-        TriggerServerEvent('night_shops:vodka',itemname, keyboard[1].input)
+        ESX.TriggerServerCallback('night_shop:checkblackmoney', function(hasMoney)
+            if hasMoney then
+                TriggerEvent('takeanim2')
+                Citizen.Wait(2000)
+                TriggerServerEvent('night_shops:pistol',price,item, keyboard[1].input)
+            else
+                exports['mythic_notify']:SendAlert('inform', ' you cant afford shit bud!')
+            end
+        end,price * keyboard[1].input) 
     end
 end)
 
