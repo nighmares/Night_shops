@@ -12,7 +12,7 @@ https://streamable.com/ol0hsn
 
 ![image](https://user-images.githubusercontent.com/73905724/128665733-f9bb0570-796a-48f4-9438-aeee867debae.png)
 
-text me
+join my discord if you need any help i can help you on my avaliable time https://discord.gg/c6pd6gMwsE
 
 
 
